@@ -1,0 +1,5 @@
+.ideadb.sqlite3
+*.pyc
+__pycache__
+.venv
+.vscode

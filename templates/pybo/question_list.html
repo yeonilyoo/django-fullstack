@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load pybo_filter %}
+{% block content %}
+    <div class="container my-3">
+        {% include "pybo/question_list/table_filter.html" %}
+        {% include "pybo/question_list/table.html" %}
+        {# page nav #}
+        {% include "pybo/question_list/page_nav.html" %}
+        <a href="{% url 'pybo:question_create' %}" class="btn btn-primary">
+            {% trans "QUESTION_LIST.CREATE_QUESTION" %}
+        </a>
+    </div>
+
+    <form id="searchForm" method="GET" action="{% url 'index' %}">
+        <input type="hidden" id="kw" name="kw" value="{{ kw|default_if_none:'' }}">
+        <input type="hidden" id="page" name="page" value="{{ page }}">
+        <input type="hidden" id="so" name="so" value="{{ so }}">
+        <input type="hidden" id="ca" name="ca" value="{{ ca }}">
+    </form>
+{% endblock %}
+{% block script %}
+    <script>
+        $(document).ready(function () {
+            $(".page-link").on('click', function () {
+                $('#page').val($(this).data("page"));
+                $("#searchForm").submit();
+            });
+            $("#btn_search").on('click', function () {
+                $("#kw").val($(".kw").val());
+                $("#page").val(1);
+                $("#searchForm").submit();
+            });
+            $(".so").on('change', function () {
+                $("#so").val($(this).val());
+                $("#page").val(1);
+                $("#searchForm").submit();
+            });
+            $(".ca").on('change', function () {
+                $("#ca").val($(this).val());
+                $("#page").val(1);
+                $("#searchForm").submit();
+            });
+        });
+    </script>
+{% endblock %}

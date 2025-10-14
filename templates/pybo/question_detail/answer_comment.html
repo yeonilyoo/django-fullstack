@@ -1,0 +1,27 @@
+{% load i18n %}
+{% if answer.comment_set.count > 0 %}
+    <div class="my-3">
+        {% for comment in answer.comment_set.all %}
+            <a id="comment_{{ comment.id }}"></a>
+            <div class="comment py-2 text-muted">
+                <span style="white-space: pre-line;">{{ comment.content }}</span>
+                <span>
+                    - {{ comment.author }}, {{ comment.create_date }}
+                    {% if comment.modify_date %}
+                        (modified: {{ comment.modify_date }})
+                    {% endif %}
+                </span>
+                {% if request.user == comment.author %}
+                    <a href="{% url 'pybo:comment_modify_answer' comment.id %}"
+                       class="small">{% trans "QUESTION_DETAIL.MODIFY" %}</a>
+                    <a href="#" class="small delete"
+                       data-uri="{% url 'pybo:comment_delete_answer' comment.id %}">{% trans "QUESTION_DETAIL.DELETE" %}</a>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+<div>
+    <a href="{% url 'pybo:comment_create_answer' answer.id %}"
+       class="small"><small>{% trans "QUESTION_DETAIL.ADD_COMMENT" %}</small></a>
+</div>

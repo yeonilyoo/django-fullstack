@@ -1,0 +1,56 @@
+{% load i18n %}
+{% load pybo_filter %}
+<table class="table">
+    <thead>
+    <tr class="text-center thead-dark">
+        <th>{% trans "QUESTION_LIST.TABLE_NO" %}</th>
+        <th>{% trans "QUESTION_LIST.CATEGORY" %}</th>
+        <th>{% trans "QUESTION_LIST.UP" %}</th>
+        <th style="width:50%">{% trans "QUESTION_LIST.QUESTION" %}</th>
+        <th>{% trans "QUESTION_LIST.AUTHOR" %}</th>
+        <th>{% trans "QUESTION_LIST.VIEW_COUNT" %}</th>
+        <th>{% trans "QUESTION_LIST.CREATE_DATE" %}</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% if question_list %}
+        {% for question in question_list %}
+            <tr class="text-center">
+                {# question_list.paginator.count = Total number of items across all pages #}
+                {# question_list.start_index = Index of the first item on the current page (1-based) #}
+                {# forloop.counter0 = Zero-based index of the current item in the loop #}
+                {# 1 = Adds 1 to the final result to make it 1-based #}
+                {# ex: 100 (total) - 11 (current page starting index) - 0~9(looping) - 1 #}
+                <td>{{ question_list.paginator.count|sub:question_list.start_index|sub:forloop.counter0|add:1 }}</td>
+                <td>
+              <span class="badge {{ question.category|category_badge_class }}">
+                {{ question.get_category_display }}
+              </span>
+                </td>
+                <td>
+                    {% if question.voter.all.count > 0 %}
+                        <span class="badge badge-warning px-2 py-1">
+                {{ question.voter.all.count }}
+            </span>
+                    {% endif %}
+                </td>
+                <td class="text-left">
+                    <a href="{% url 'pybo:detail' question.id %}">{{ question.subject }}</a>
+                    {% if question.answer_set.count > 0 %}
+                        <span class="text-danger small ml-2">
+                    {{ question.answer_set.count }}
+                </span>
+                    {% endif %}
+                </td>
+                <td>{{ question.author.username }}</td>
+                <td>{{ question.viewer.count }}</td>
+                <td>{{ question.create_date }}</td>
+            </tr>
+        {% endfor %}
+    {% else %}
+        <tr>
+            <td colspan="5">no questions</td>
+        </tr>
+    {% endif %}
+    </tbody>
+</table>

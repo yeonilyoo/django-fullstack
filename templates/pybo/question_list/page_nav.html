@@ -1,0 +1,46 @@
+{% load i18n %}
+<ul class="pagination justify-content-center">
+    {% if question_list.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="#"
+               data-page="{{ question_list.previous_page_number }}">{% trans "QUESTION_LIST.TABLE.PREVIOUS" %}</a>
+        </li>
+    {% else %}
+        <li class="page-item disabled">
+            <a class="page-link" tabindex="-1" aria-disabled="true"
+               href="#">{% trans "QUESTION_LIST.TABLE.PREVIOUS" %}</a>
+        </li>
+    {% endif %}
+    {% for page_number in page_range %}
+        <li class="page-item {% if page_number == question_list.number %}active{% endif %}"
+            {% if page_number == question_list.number %}aria-current="page"{% endif %}>
+            <a class="page-link" href="#" data-page="{{ page_number }}">{{ page_number }}</a>
+        </li>
+    {% endfor %}
+    {% comment %}
+    {% for page_number in question_list.paginator.page_range %}
+        {% if page_number >= question_list.number|add:-5 and page_number <= question_list.number|add:5 %}
+            {% if page_number == question_list.number %}
+            <li class="page-item active" aria-current="page">
+                <a class="page-link" href="#" data-page="{{ page_number }}">{{ page_number }}</a>
+            </li>
+            {% else %}
+            <li class="page-item">
+                <a class="page-link" href="#" data-page="{{ page_number }}">{{ page_number }}</a>
+            </li>
+            {% endif %}
+        {% endif %}
+    {% endfor %}
+    {% endcomment %}
+    {% if question_list.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="#"
+               data-page="{{ question_list.next_page_number }}">{% trans "QUESTION_LIST.TABLE.NEXT" %}</a>
+        </li>
+    {% else %}
+        <li class="page-item disabled">
+            <a class="page-link" tabindex="-1" aria-disabled="true"
+               href="#">{% trans "QUESTION_LIST.TABLE.NEXT" %}</a>
+        </li>
+    {% endif %}
+</ul>

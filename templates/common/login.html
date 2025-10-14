@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% load socialaccount %}
+
+{% block head %}
+    <style>
+        .google-btn {
+            display: inline-block;
+            background: white;
+            border: 1px solid #ccc;
+            padding: 10px 15px;
+            border-radius: 4px;
+            text-decoration: none;
+            color: #444;
+            font-weight: bold;
+        }
+
+        .google-btn:hover {
+            background: #f7f7f7;
+        }
+    </style>
+    <title>Pybo: login</title>
+{% endblock %}
+{% block content %}
+    <div class="container my-3">
+        <div class="row">
+            <div class="col-4">
+                <h4>Log in</h4>
+            </div>
+            <div class="col-8 text-right">
+            <span>
+                or <a href="{% url 'common:signup' %}">create account</a>
+            </span>
+            </div>
+        </div>
+        <form method="POST" class="post-form" action="{% url 'common:login' %}">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ next }}">
+            {% include "form_errors.html" %}
+            <div class="form-group">
+                <label for="username">ID</label>
+                <input type="text" class="form-control" id="username" name="username"
+                       value="{{ form.username.value|default_if_none:'' }}">
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" class="form-control" id="password" name="password"
+                       value="{{ form.password.value|default_if_none:'' }}">
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+        <br/>
+        <a href="{% provider_login_url 'google' %}" class="google-btn">
+            <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google logo"
+                 style="height:20px; vertical-align:middle;">
+            <span>Sign in with Google</span>
+        </a>
+        {#{% endcomment %}#}
+    </div>
+{% endblock %}

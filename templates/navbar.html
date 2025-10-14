@@ -1,0 +1,64 @@
+{% load i18n %}
+{% load navbar_filter %}
+{# removed navbar-expand-lg from nav class to trigger always show hamburger #}
+{% comment %}
+navbar: navigation default style
+navbar-expand-lg: screen larger than 992px, open, otherwise, toggle
+navbar-light: light font
+bg-light: background light gray
+border-bottom: add underline for navbar
+{% endcomment %}
+<nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
+    <a class="navbar-brand" href="{% url 'pybo:index' %}">{% trans "NAVBAR.MAIN" %}</a>
+    {% comment %}
+    data-toggle: collapse trigger
+    data-target: open and close for target(id="navbarNav")
+    aria-: screen property config
+    {% endcomment %}
+    <button class="navbar-toggler ml-auto" type="button" data-toggle="collapse"
+            data-target="#navbarNav" aria-controls="navbarNav"
+            aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <!-- Left side: login/logout/signup -->
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                {% if user.is_authenticated %}
+                    <!-- django 4.1 and above only takes POST for logout -->
+                    {#<a class="nav-link" href="{%  url 'common:logout' %}">{{ user.username }} (logout)</a>#}
+                    <form action="{% url 'common:logout' %}" method="post" style="display:inline;">
+                      {% csrf_token %}
+                      <button type="submit" class="nav-link btn btn-link" style="padding:0;">
+                        {{ user.username }} ({% trans "NAVBAR.LOGOUT" %})
+                      </button>
+                    </form>
+                {% else %}
+                <ul class="list-inline">
+                    <li class="list-inline-item">
+                        <a class="nav-link" href="{% url 'common:login' %}">{% trans "NAVBAR.LOGIN" %}</a>
+                    </li>
+                    <li class="list-inline-item">
+                        <a class="nav-link" href="{%  url 'common:signup' %}">{% trans "NAVBAR.CREATE_ACCOUNT" %}</a>
+                    </li>
+                </ul>
+                {% endif %}
+            </li>
+        </ul>
+
+        <!-- Right side: language selector -->
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <form action="{% url 'set_language' %}" method="post" class="d-inline">
+                    {% csrf_token %}
+                    <input type="hidden" name="next" value="{{ request.path|strip_lang_prefix }}">
+                    <select name="language" onchange="this.form.submit()" class="form-control form-control-sm">
+                        <option value="en" {% if request|is_lang:"en" %}selected{% endif %}>English</option>
+                        <option value="ko" {% if request|is_lang:"ko" %}selected{% endif %}>한국어</option>
+                    </select>
+                </form>
+            </li>
+        </ul>
+    </div>
+</nav>

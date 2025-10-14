@@ -1,0 +1,10 @@
+{% if messages %}
+    {% for message in messages %}
+        {% if message.level >= DEFAULT_MESSAGE_LEVELS.WARNING %}
+            <div class="alert alert-danger my-3" role="alert">
+                <strong>{{ message.tags|title }}</strong>
+                <p>{{ message }}</p>
+            </div>
+        {% endif %}
+    {% endfor %}
+{% endif %}
