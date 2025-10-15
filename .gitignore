@@ -4,4 +4,4 @@ __pycache__
 .venv
 .vscode
 db.sqlite3
-#common/const/const.py
+#config/const/const.py
