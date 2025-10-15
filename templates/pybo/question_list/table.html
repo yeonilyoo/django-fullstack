@@ -44,7 +44,7 @@
                 </td>
                 <td>{{ question.author.username }}</td>
                 <td>{{ question.viewer.count }}</td>
-                <td>{{ question.create_date }}</td>
+                <td>{{ question.create_date|date:"SHORT_DATETIME_FORMAT" }}</td>
             </tr>
         {% endfor %}
     {% else %}

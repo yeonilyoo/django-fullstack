@@ -12,4 +12,9 @@ urlpatterns = [
     ),
     path("logout/", auth_views.LogoutView.as_view(), name="logout"),
     path("signup/", views.signup, name="signup"),
+    path(
+        "reset-temp-password/",
+        views.reset_with_temp_password,
+        name="reset_temp_password",
+    ),
 ]

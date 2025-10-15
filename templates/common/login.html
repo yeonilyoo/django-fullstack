@@ -48,12 +48,27 @@
             </div>
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
+
+        <br/>
+        <div class="col-4">
+            <h4>Reset password</h4>
+        </div>
+        <form method="POST" class="post-form" action="{% url 'common:reset_temp_password' %}">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="identifier">Username or Email:</label>
+            </div>
+            <div class="form-group">
+                <input type="text" name="identifier" required>
+            </div>
+            <button type="submit">Reset with Temp Password</button>
+        </form>
+
         <br/>
         <a href="{% provider_login_url 'google' %}" class="google-btn">
             <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google logo"
                  style="height:20px; vertical-align:middle;">
             <span>Sign in with Google</span>
         </a>
-        {#{% endcomment %}#}
     </div>
 {% endblock %}
