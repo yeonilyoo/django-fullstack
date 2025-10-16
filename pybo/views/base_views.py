@@ -112,7 +112,7 @@ def detail(request, question_id):
 
     context = {
         "question": question,
-        "answer_list": answer_list,
+        "answer_list": page_obj,
         "page_range": page_range,
         "page": page,
         "kw": kw,
