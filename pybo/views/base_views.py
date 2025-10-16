@@ -77,16 +77,45 @@ def index(request):
 def detail(request, question_id):
     # question = Question.objects.get(id=question_id)
     question = get_object_or_404(Question, pk=question_id)
-    answer_list = (
-        Answer.objects.filter(question=question)
-        .annotate(num_voter=Count("voter"))
-        .order_by("-num_voter")
-    )
+
+    page = request.GET.get("page", "1")
+    kw = request.GET.get("kw", "")
+    so = request.GET.get("so", "")
+
+    if so == "old":
+        answer_list = question.answer_set.order_by("create_date")
+    elif so == "popular":
+        answer_list = question.answer_set.annotate(num_voter=Count("voter")).order_by(
+            "-num_voter", "-create_date"
+        )
+    else:
+        answer_list = question.answer_set.order_by("-create_date")
+
+    if kw:
+        answer_list = answer_list.filter(
+            Q(content__icontains=kw) | Q(author__username__icontains=kw),
+        ).distinct()
+
+    paginator = Paginator(answer_list, 5)
+    page_obj = paginator.get_page(page)
+
+    current_page = page_obj.number
+    start_index = max(current_page - 5, 1)
+    end_index = min(current_page + 5, paginator.num_pages)
+    page_range = range(start_index, end_index + 1)
+
     if (
         request.user.is_authenticated
         and not question.viewer.filter(id=request.user.id).exists()
     ):
         question.viewer.add(request.user)
 
-    context = {"question": question, "answer_list": answer_list}
+    context = {
+        "question": question,
+        "answer_list": answer_list,
+        "page_range": page_range,
+        "page": page,
+        "kw": kw,
+        "so": so,
+    }
     return render(request, "pybo/question_detail.html", context)
