@@ -7,3 +7,14 @@ CATEGORY_CHOICE = [
 ]
 
 CATEGORY_ALL_CHOICE = [("all", _("QUESTION.CATEGORY.ALL")), *CATEGORY_CHOICE]
+
+# Exclude keyword filter for search
+SEARCH_KW_FILTER_LIST = [
+    "password",
+    "first_name",
+    "last_name",
+    "email",
+    "phone",
+    "address",
+    "category",
+]

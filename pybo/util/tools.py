@@ -8,11 +8,12 @@ from django.db.models import (
     ManyToOneRel,
     ManyToManyRel,
 )
-from typing import Type, List, Set
+from typing import Type, List
 
 
 def get_string_fields(
     model: Type[Model],
+    filter: List[str],
     prefix: str = "",
     depth: int = 1,
     visited=None,
@@ -42,7 +43,9 @@ def get_string_fields(
             continue
 
         # Direct string fields
-        if isinstance(field, (CharField, TextField)) and "password" not in field.name:
+        if isinstance(field, (CharField, TextField)) and not any(
+            exclude in field.name for exclude in filter
+        ):
             fields.append(f"{prefix}{field.name}")
 
         # Forward relations
@@ -51,7 +54,9 @@ def get_string_fields(
             if isinstance(related_model, type) and issubclass(related_model, Model):
                 nested_prefix = f"{prefix}{field.name}__"
                 fields.extend(
-                    get_string_fields(related_model, nested_prefix, depth - 1, visited)
+                    get_string_fields(
+                        related_model, filter, nested_prefix, depth - 1, visited
+                    )
                 )
 
         # Reverse relations
@@ -60,7 +65,9 @@ def get_string_fields(
             if isinstance(related_model, type) and issubclass(related_model, Model):
                 nested_prefix = f"{prefix}{field.name}__"
                 fields.extend(
-                    get_string_fields(related_model, nested_prefix, depth - 1, visited)
+                    get_string_fields(
+                        related_model, filter, nested_prefix, depth - 1, visited
+                    )
                 )
 
     return fields

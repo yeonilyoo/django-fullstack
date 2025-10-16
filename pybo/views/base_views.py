@@ -5,7 +5,7 @@ from django.core.paginator import Paginator
 from django.shortcuts import render, get_object_or_404
 from django.db.models import Q, Count
 
-from ..const.const import CATEGORY_ALL_CHOICE
+from ..const.const import CATEGORY_ALL_CHOICE, SEARCH_KW_FILTER_LIST
 from ..models import Question, Answer
 from ..util.tools import get_string_fields
 
@@ -44,7 +44,9 @@ def index(request):
         #     | Q(answer__content__icontains=kw)
         #     | Q(answer__author__username__icontains=kw)
         # ).distinct()
-        question_fields = get_string_fields(Question, depth=2)
+        question_fields = get_string_fields(
+            model=Question, filter=SEARCH_KW_FILTER_LIST, depth=2
+        )
         # print(question_fields)
         query = reduce(
             operator.or_,

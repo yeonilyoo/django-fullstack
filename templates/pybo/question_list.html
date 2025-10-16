@@ -31,6 +31,15 @@
                 $("#page").val(1);
                 $("#searchForm").submit();
             });
+            $(".kw").on('keypress', function (e) {
+                {# enter #}
+                if (e.which === 13) {
+                    e.preventDefault();
+                    $("#kw").val($(".kw").val());
+                    $("#page").val(1);
+                    $("#searchForm").submit();
+                }
+            });
             $(".so").on('change', function () {
                 $("#so").val($(this).val());
                 $("#page").val(1);
