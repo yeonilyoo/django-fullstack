@@ -26,6 +26,7 @@ from pybo.views import base_views
 
 urlpatterns = [
     path("i18n/", include("django.conf.urls.i18n")),  # language switch URL
+    path("api/", include("api.urls")),
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

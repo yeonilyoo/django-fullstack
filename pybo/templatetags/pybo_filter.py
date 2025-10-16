@@ -1,5 +1,7 @@
 import markdown
 from django import template
+
+# 장고 이스케이프에서 안전한 html 태그로 렌더링 하기 위해 필요
 from django.utils.safestring import mark_safe
 
 register = template.Library()
