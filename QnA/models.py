@@ -1,7 +1,7 @@
 from django.db import models
 
 from common.models import User
-from pybo.const.const import CATEGORY_CHOICE
+from QnA.const.const import CATEGORY_CHOICE
 
 
 class Question(models.Model):

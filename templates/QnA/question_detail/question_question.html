@@ -1,11 +1,11 @@
 {% load i18n %}
-{% load pybo_filter %}
+{% load qna_filter %}
 <div class="row my-3">
     <div class="col-1">
         <div class="bg-light text-center p-3 border font-weight-bolder mb-1">
             {{ question.voter.count }}
         </div>
-        <a href="#" data-uri="{% url 'pybo:vote_question' question.id %}"
+        <a href="#" data-uri="{% url 'QnA:vote_question' question.id %}"
            class="recommend btn btn-sm btn-secondary btn-block my-1">{% trans "QUESTION_DETAIL.UP" %}</a>
     </div>
     <div class="col-11">
@@ -26,14 +26,14 @@
                 </div>
                 {% if request.user == question.author %}
                     <div class="my-3">
-                        <a href="{% url 'pybo:question_modify' question.id %}"
+                        <a href="{% url 'QnA:question_modify' question.id %}"
                            class="btn btn-sm btn-outline-secondary">Edit</a>
                         <a href="#" class="delete btn btn-sm btn-outline-secondary"
-                           data-uri="{% url 'pybo:question_delete' question.id %}">Delete</a>
+                           data-uri="{% url 'QnA:question_delete' question.id %}">Delete</a>
                     </div>
                 {% endif %}
                 <!-- comment -->
-                {% include "pybo/question_detail/question_comment.html" %}
+                {% include "QnA/question_detail/question_comment.html" %}
                 <!-- end of comment -->
             </div>
         </div>

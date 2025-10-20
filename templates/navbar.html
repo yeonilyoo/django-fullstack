@@ -9,7 +9,7 @@ bg-light: background light gray
 border-bottom: add underline for navbar
 {% endcomment %}
 <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
-    <a class="navbar-brand" href="{% url 'pybo:index' %}">{% trans "NAVBAR.MAIN" %}</a>
+    <a class="navbar-brand" href="{% url 'QnA:index' %}">{% trans "NAVBAR.MAIN" %}</a>
     {% comment %}
     data-toggle: collapse trigger
     data-target: open and close for target(id="navbarNav")
@@ -29,20 +29,20 @@ border-bottom: add underline for navbar
                     <!-- django 4.1 and above only takes POST for logout -->
                     {#<a class="nav-link" href="{%  url 'common:logout' %}">{{ user.username }} (logout)</a>#}
                     <form action="{% url 'common:logout' %}" method="post" style="display:inline;">
-                      {% csrf_token %}
-                      <button type="submit" class="nav-link btn btn-link" style="padding:0;">
-                        {{ user.username }} ({% trans "NAVBAR.LOGOUT" %})
-                      </button>
+                        {% csrf_token %}
+                        <button type="submit" class="nav-link btn btn-link" style="padding:0;">
+                            {{ user.username }} ({% trans "NAVBAR.LOGOUT" %})
+                        </button>
                     </form>
                 {% else %}
-                <ul class="list-inline">
-                    <li class="list-inline-item">
-                        <a class="nav-link" href="{% url 'common:login' %}">{% trans "NAVBAR.LOGIN" %}</a>
-                    </li>
-                    <li class="list-inline-item">
-                        <a class="nav-link" href="{%  url 'common:signup' %}">{% trans "NAVBAR.CREATE_ACCOUNT" %}</a>
-                    </li>
-                </ul>
+                    <ul class="list-inline">
+                        <li class="list-inline-item">
+                            <a class="nav-link" href="{% url 'common:login' %}">{% trans "NAVBAR.LOGIN" %}</a>
+                        </li>
+                        <li class="list-inline-item">
+                            <a class="nav-link" href="{% url 'common:signup' %}">{% trans "NAVBAR.CREATE_ACCOUNT" %}</a>
+                        </li>
+                    </ul>
                 {% endif %}
             </li>
         </ul>

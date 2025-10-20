@@ -1,9 +1,9 @@
 {% extends 'base.html' %}
 {% load i18n %}
-{% load pybo_filter %}
+{% load qna_filter %}
 {% block content %}
     <div class="container my-3">
-        {% include "pybo/question_detail/messages.html" %}
+        {% include "QnA/question_detail/messages.html" %}
 
         <div style="display: flex; align-items: center; gap: 1rem;">
             <span class="badge {{ question.category|category_badge_class }}">
@@ -11,16 +11,16 @@
             </span>
             <h2 class="border-bottom py2">{{ question.subject }}</h2>
         </div>
-        {% include "pybo/question_detail/question_question.html" %}
+        {% include "QnA/question_detail/question_question.html" %}
         <h5 class="border-bottom my-3 py-2">
             {{ question.answer_set.count }} {% trans "QUESTION_DETAIL.ANSWERS_EXIST" %}
         </h5>
         <!-- start of answer -->
-        {% include "pybo/question_detail/question_answer_filter.html" %}
+        {% include "QnA/question_detail/question_answer_filter.html" %}
         {#{% for answer in question.answer_set.all %}#}
-        {% include "pybo/question_detail/question_answer.html" %}
-        {% include "pybo/question_detail/question_answer_page_nav.html" %}
-        <form action="{% url 'pybo:answer_create' question.id %}" method="post" class="my-3">
+        {% include "QnA/question_detail/question_answer.html" %}
+        {% include "QnA/question_detail/question_answer_page_nav.html" %}
+        <form action="{% url 'QnA:answer_create' question.id %}" method="post" class="my-3">
             {% csrf_token %}
             {% if form.errors %}
                 <div class="alert alert-danger" role="alert">
@@ -40,7 +40,7 @@
             <input type="submit" value="{% trans "QUESTION_DETAIL.SUBMIT" %}" class="btn btn-primary">
         </form>
     </div>
-    <form id="searchForm" method="GET" action="{% url 'pybo:detail' question.id %}">
+    <form id="searchForm" method="GET" action="{% url 'QnA:detail' question.id %}">
         <input type="hidden" id="kw" name="kw" value="{{ kw|default_if_none:'' }}">
         <input type="hidden" id="page" name="page" value="{{ page }}">
         <input type="hidden" id="so" name="so" value="{{ so }}">

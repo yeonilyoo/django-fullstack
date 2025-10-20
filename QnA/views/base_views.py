@@ -71,7 +71,7 @@ def index(request):
         "category": CATEGORY_ALL_CHOICE,
         "ca": ca,
     }
-    return render(request, "pybo/question_list.html", context)
+    return render(request, "QnA/question_list.html", context)
 
 
 def detail(request, question_id):
@@ -118,4 +118,4 @@ def detail(request, question_id):
         "kw": kw,
         "so": so,
     }
-    return render(request, "pybo/question_detail.html", context)
+    return render(request, "QnA/question_detail.html", context)

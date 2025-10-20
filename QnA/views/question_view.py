@@ -17,7 +17,7 @@ def question_create_view(request):
     form = QuestionForm()
     context = {"form": form}
 
-    return render(request, "pybo/question_form.html", context)
+    return render(request, "QnA/question_form.html", context)
 
 
 @api_view(["POST"])

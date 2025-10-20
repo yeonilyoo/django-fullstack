@@ -1,13 +1,13 @@
 {% extends 'base.html' %}
 {% load i18n %}
-{% load pybo_filter %}
+{% load qna_filter %}
 {% block content %}
     <div class="container my-3">
-        {% include "pybo/question_list/table_filter.html" %}
-        {% include "pybo/question_list/table.html" %}
+        {% include "QnA/question_list/table_filter.html" %}
+        {% include "QnA/question_list/table.html" %}
         {# page nav #}
-        {% include "pybo/question_list/page_nav.html" %}
-        <a href="{% url 'pybo:question_create_view' %}" class="btn btn-primary">
+        {% include "QnA/question_list/page_nav.html" %}
+        <a href="{% url 'QnA:question_create_view' %}" class="btn btn-primary">
             {% trans "QUESTION_LIST.CREATE_QUESTION" %}
         </a>
     </div>

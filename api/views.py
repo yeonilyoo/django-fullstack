@@ -3,7 +3,7 @@ from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 
 from api.serializer import QuestionSerializer, AnswerSerializer
-from pybo.models import Question, Answer
+from QnA.models import Question, Answer
 
 
 # Create your views here.

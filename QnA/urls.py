@@ -1,7 +1,7 @@
 from django.urls import path
 from .views import base_views, question_view, answer_view, comment_view, vote_view
 
-app_name = "pybo"
+app_name = "QnA"
 urlpatterns = [
     # base view
     path("", base_views.index, name="index"),

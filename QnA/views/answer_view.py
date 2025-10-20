@@ -19,10 +19,10 @@ def answer_create(request, question_id):
             answer.create_date = timezone.now()
             answer.question = question
             answer.save()
-            # return redirect("pybo:detail", question_id=question_id)
+            # return redirect("QnA:detail", question_id=question_id)
             return redirect(
                 "{}#answer_{}".format(
-                    resolve_url("pybo:detail", question_id=question.id), answer.id
+                    resolve_url("QnA:detail", question_id=question.id), answer.id
                 )
             )
     else:
@@ -32,8 +32,8 @@ def answer_create(request, question_id):
     # question.answer_set.create(
     #     content=request.POST.get("content"), create_date=timezone.now()
     # )
-    # return redirect("pybo:detail", question_id=question_id)
-    return render(request, "pybo/question_detail.html", context)
+    # return redirect("QnA:detail", question_id=question_id)
+    return render(request, "QnA/question_detail.html", context)
 
 
 @login_required(login_url="common:login")
@@ -41,7 +41,7 @@ def answer_modify(request, answer_id):
     answer = get_object_or_404(Answer, pk=answer_id)
     if request.user != answer.author:
         messages.error(request, "You are not the author of this question.")
-        return redirect("pybo:detail", question_id=answer.question.id)
+        return redirect("QnA:detail", question_id=answer.question.id)
 
     if request.method == "POST":
         form = AnswerForm(request.POST, instance=answer)
@@ -50,17 +50,17 @@ def answer_modify(request, answer_id):
             answer.author = request.user
             answer.modify_date = timezone.now()
             answer.save()
-            # return redirect("pybo:detail", question_id=answer.question.id)
+            # return redirect("QnA:detail", question_id=answer.question.id)
             return redirect(
                 "{}#answer_{}".format(
-                    resolve_url("pybo:detail", question_id=answer.question.id),
+                    resolve_url("QnA:detail", question_id=answer.question.id),
                     answer.id,
                 )
             )
     else:
         form = AnswerForm(instance=answer)
     context = {"answer": answer, "form": form}
-    return render(request, "pybo/answer_form.html", context)
+    return render(request, "QnA/answer_form.html", context)
 
 
 @login_required(login_url="common:login")
@@ -70,4 +70,4 @@ def answer_delete(request, answer_id):
         messages.error(request, "You are not the author of this answer.")
     else:
         answer.delete()
-    return redirect("pybo:detail", question_id=answer.question.id)
+    return redirect("QnA:detail", question_id=answer.question.id)

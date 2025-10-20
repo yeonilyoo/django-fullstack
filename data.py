@@ -5,9 +5,9 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
 django.setup()
 
 from django.utils import timezone
-from pybo.models import Question, Answer
+from QnA.models import Question, Answer
 from common.models import User
-from pybo.const.const import CATEGORY_CHOICE
+from QnA.const.const import CATEGORY_CHOICE
 
 
 if __name__ == "__main__":

@@ -12,16 +12,16 @@
                     {% endif %}
                 </span>
                 {% if request.user == comment.author %}
-                    <a href="{% url 'pybo:comment_modify_answer' comment.id %}"
+                    <a href="{% url 'QnA:comment_modify_answer' comment.id %}"
                        class="small">{% trans "QUESTION_DETAIL.MODIFY" %}</a>
                     <a href="#" class="small delete"
-                       data-uri="{% url 'pybo:comment_delete_answer' comment.id %}">{% trans "QUESTION_DETAIL.DELETE" %}</a>
+                       data-uri="{% url 'QnA:comment_delete_answer' comment.id %}">{% trans "QUESTION_DETAIL.DELETE" %}</a>
                 {% endif %}
             </div>
         {% endfor %}
     </div>
 {% endif %}
 <div>
-    <a href="{% url 'pybo:comment_create_answer' answer.id %}"
+    <a href="{% url 'QnA:comment_create_answer' answer.id %}"
        class="small"><small>{% trans "QUESTION_DETAIL.ADD_COMMENT" %}</small></a>
 </div>

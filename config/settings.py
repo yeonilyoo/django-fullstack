@@ -32,7 +32,7 @@ ALLOWED_HOSTS = ["*"]
 
 INSTALLED_APPS = [
     "common.apps.CommonConfig",
-    "pybo.apps.PyboConfig",
+    "QnA.apps.QnAConfig",
     # API
     "rest_framework",
     "api.apps.ApiConfig",

@@ -20,7 +20,7 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls.i18n import i18n_patterns
-from pybo.views import base_views
+from QnA.views import base_views
 
 # from django.views import debug
 
@@ -35,7 +35,7 @@ urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 urlpatterns += i18n_patterns(
     path("", base_views.index, name="index"),
     path("admin/", admin.site.urls),
-    path("pybo/", include("pybo.urls")),
+    path("QnA/", include("QnA.urls")),
     path("common/", include("common.urls")),
     path("accounts/", include("allauth.urls")),
 )
