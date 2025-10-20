@@ -1,57 +1,70 @@
 from django.contrib.auth.decorators import login_required
-from django.contrib import messages
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render
 from django.utils import timezone
+from rest_framework import status
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.reverse import reverse
 
+from api.serializer import QuestionSerializer
 from ..forms import QuestionForm
 from ..models import Question
 
 
 @login_required(login_url="common:login")
+def question_create_view(request):
+    form = QuestionForm()
+    context = {"form": form}
+
+    return render(request, "pybo/question_form.html", context)
+
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
 def question_create(request):
-    if request.method == "POST":
-        form = QuestionForm(request.POST)
-        if form.is_valid():
-            question = form.save(commit=False)
-            question.author = request.user
-            question.create_date = timezone.now()
-            question.save()
-            return redirect("pybo:detail", question_id=question.id)
-    else:
-        form = QuestionForm()
-    # form will be fresh QuestionFrom if coming from Get
-    # if tried POST and invalid, it's coming from QuestionForm(request.POST)
-    context = {"form": form}
+    serializer = QuestionSerializer(data=request.data)
+    if serializer.is_valid():
+        question = serializer.save(author=request.user, create_date=timezone.now())
+        detail_url = reverse("detail", args=[question.id], request=request)
+        headers = {"Location": detail_url}
 
-    return render(request, "pybo/question_form.html", context)
+        return Response(
+            serializer.data, status=status.HTTP_201_CREATED, headers=headers
+        )
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-@login_required(login_url="common:login")
+@api_view(["PUT"])
+@permission_classes([IsAuthenticated])
 def question_modify(request, question_id):
-    question = get_object_or_404(Question, pk=question_id)
+    question = Question.objects.get(id=question_id)
+
     if request.user != question.author:
-        messages.error(request, "You are not the author of this question.")
-        return redirect("pybo:detail", question_id=question.id)
+        return Response({"detail", "unauthorized"}, status=status.HTTP_403_FORBIDDEN)
 
-    if request.method == "POST":
-        form = QuestionForm(request.POST, instance=question)
-        if form.is_valid():
-            question = form.save(commit=False)
-            question.author = request.user
-            question.modify_date = timezone.now()
-            question.save()
-            return redirect("pybo:detail", question_id=question.id)
-    else:
-        form = QuestionForm(instance=question)
-    context = {"form": form}
-    return render(request, "pybo/question_form.html", context)
+    serializer = QuestionSerializer(data=request.data, partial=True)
+    if serializer.is_valid():
+        serializer.save(modify_date=timezone.now())
+        detail_url = reverse("detail", args=[question.id], request=request)
+        headers = {"Location": detail_url}
+        return Response(
+            serializer.data, status=status.HTTP_202_ACCEPTED, headers=headers
+        )
+
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-@login_required(login_url="common:login")
+@api_view(["DELETE"])
+@permission_classes([IsAuthenticated])
 def question_delete(request, question_id):
-    question = get_object_or_404(Question, pk=question_id)
+    question = Question.objects.get(id=question_id)
     if request.user != question.author:
-        messages.error(request, "You are not the author of this question.")
-        return redirect("pybo:detail", question_id=question.id)
+        return Response({"detail", "unauthorized"}, status=status.HTTP_403_FORBIDDEN)
+
     question.delete()
-    return redirect("pybo:index")
+    detail_url = reverse("index", request=request)
+    headers = {"Location": detail_url}
+    return Response(
+        {"index": "deleted"}, status=status.HTTP_204_NO_CONTENT, headers=headers
+    )

@@ -7,7 +7,7 @@
         {% include "pybo/question_list/table.html" %}
         {# page nav #}
         {% include "pybo/question_list/page_nav.html" %}
-        <a href="{% url 'pybo:question_create' %}" class="btn btn-primary">
+        <a href="{% url 'pybo:question_create_view' %}" class="btn btn-primary">
             {% trans "QUESTION_LIST.CREATE_QUESTION" %}
         </a>
     </div>

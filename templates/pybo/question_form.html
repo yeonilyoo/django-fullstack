@@ -1,41 +1,79 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="container">
-    <h5 class="my-3 border-bottom pb-2">Create question</h5>
-    <form method="POST" class="post-form my-3">
-        {%  csrf_token %}
-        {#{{ form.as_p }}#}
-        {% if form.errors %}
-            <div class="alert alert-danger" role="alert">
-                {% for field in form %}
-                    {% if field.errors %}
-                    <strong>{{  field.label }}</strong>
-                    {{  field.errors }}
-                    {% endif %}
-                {% endfor %}
-            </div>
-        {% endif %}
+    <div class="container">
+        <h5 class="my-3 border-bottom pb-2">Create question</h5>
+        <form id="questionForm" class="post-form my-3">
+            {% csrf_token %}
+            {#{{ form.as_p }}#}
+            {% if form.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {% for field in form %}
+                        {% if field.errors %}
+                            <strong>{{ field.label }}</strong>
+                            {{ field.errors }}
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            {% endif %}
 
-        <div class="form-group">
-          <label for="category">Category</label>
-          <select class="form-control" name="category" id="category">
-            {% for value, label in form.fields.category.choices %}
-              <option value="{{ value }}" {% if form.category.value == value %}selected{% endif %}>
-                {{ label }}
-              </option>
-            {% endfor %}
-          </select>
-        </div>
-        <div class="form-group">
-            <label for="subject">Subject</label>
-            <input type="text" class="form-control" name="subject" id="subject"
-                   value="{{ form.subject.value|default_if_none:'' }}">
-        </div>
-        <div class="form-group">
-            <label for="content">Content</label>
-            <textarea class="form-control" name="content" id="content" rows="10">{{ form.content.value|default_if_none:'' }}</textarea>
-        </div>
-        <button type="submit" class="btn btn-primary">Save</button>
-    </form>
-</div>
+            <div class="form-group">
+                <label for="category">Category</label>
+                <select class="form-control" name="category" id="category">
+                    {% for value, label in form.fields.category.choices %}
+                        <option value="{{ value }}" {% if form.category.value == value %}selected{% endif %}>
+                            {{ label }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="subject">Subject</label>
+                <input type="text" class="form-control" name="subject" id="subject"
+                       value="{{ form.subject.value|default_if_none:'' }}">
+            </div>
+            <div class="form-group">
+                <label for="content">Content</label>
+                <textarea class="form-control" name="content" id="content"
+                          rows="10">{{ form.content.value|default_if_none:'' }}</textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Save</button>
+        </form>
+    </div>
 {% endblock %}
+<script>
+    document.getElementById("questionForm").addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        const subject = document.getElementById("subject").value;
+        const content = document.getElementById("content").value;
+        const category = document.getElementById("category").value;
+        const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+
+        /*
+        fetch("
+        {% url 'pybo:question_create' %}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": csrftoken
+            },
+            body: JSON.stringify({
+                subject: subject,
+                content: content,
+                category: category
+            })
+        })
+            .then(response => {
+                if (response.status === 201) {
+                    const location = response.headers.get("Location");
+                    window.location.href = location;  // Redirect to detail page
+                } else {
+                    return response.json().then(data => {
+                        alert("Error: " + JSON.stringify(data));
+                    });
+                }
+            });
+            */
+    });
+</script>
