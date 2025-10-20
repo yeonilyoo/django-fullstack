@@ -6,6 +6,11 @@ urlpatterns = [
     # base view
     path("", base_views.index, name="index"),
     path("<int:question_id>/", base_views.detail, name="detail"),
+    path(
+        "question/create/",
+        question_view.question_create_view,
+        name="question_create_view",
+    ),
     path("question/create/", question_view.question_create, name="question_create"),
     # question view
     path(
