@@ -26,12 +26,7 @@ def question_create(request):
     serializer = QuestionSerializer(data=request.data)
     if serializer.is_valid():
         question = serializer.save(author=request.user, create_date=timezone.now())
-        detail_url = reverse("detail", args=[question.id], request=request)
-        headers = {"Location": detail_url}
-
-        return Response(
-            serializer.data, status=status.HTTP_201_CREATED, headers=headers
-        )
+        return Response({"id": question.id}, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -46,11 +41,7 @@ def question_modify(request, question_id):
     serializer = QuestionSerializer(data=request.data, partial=True)
     if serializer.is_valid():
         serializer.save(modify_date=timezone.now())
-        detail_url = reverse("detail", args=[question.id], request=request)
-        headers = {"Location": detail_url}
-        return Response(
-            serializer.data, status=status.HTTP_202_ACCEPTED, headers=headers
-        )
+        return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
 
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

@@ -1,8 +1,11 @@
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import make_password
 from django.core.mail import send_mail
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from django.utils.crypto import get_random_string
+from rest_framework_simplejwt.tokens import RefreshToken
 
 from common.forms import UserForm
 from common.models import User
@@ -48,3 +51,21 @@ def reset_with_temp_password(request):
 
         return render(request, "common/login.html")
     return render(request, "common/login.html")
+
+
+@login_required
+def get_jwt_after_login(request):
+    """
+    Return a fresh access and refresh token for a logged-in user.
+    """
+    user = request.user
+    refresh = RefreshToken.for_user(user)
+    return JsonResponse({"access": str(refresh.access_token), "refresh": str(refresh)})
+
+
+@login_required
+def is_session_valid(request):
+    """
+    lightweight check to see if the Django session is still active.
+    """
+    return JsonResponse({"status": "valid"})

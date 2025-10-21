@@ -13,6 +13,119 @@
     {% endcomment %}
     <script src="{% static 'jquery-3.7.1.min.js' %}"></script>
     <script src="{% static 'bootstrap.min.js' %}"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", async function () {
+
+            //Check whether user is authenticated
+            const userIsAuthenticated = {{ request.user.is_authenticated|yesno:"true,false" }};
+            if (!userIsAuthenticated) {
+                // Not logged in → do nothing
+                return;
+            }
+
+            // Check if JWT access token is expired
+            function isTokenExpired(token) {
+                if (!token) return true;
+                try {
+                    const payload = JSON.parse(atob(token.split('.')[1]));
+                    return payload.exp * 1000 < Date.now();
+                } catch {
+                    return true;
+                }
+            }
+
+            // Fetch new JWT tokens from Django session
+            async function fetchJWTFromSession() {
+                try {
+                    const res = await fetch("{% url 'common:get_jwt_after_login' %}", {
+                        method: "GET",
+                        credentials: "include"
+                    });
+                    if (!res.ok) throw new Error("Session expired");
+                    const data = await res.json();
+                    localStorage.setItem("access_token", data.access);
+                    localStorage.setItem("refresh_token", data.refresh);
+                    console.log("JWT fetched from session successfully!");
+                    return data.access;
+                } catch (err) {
+                    console.log("Failed to fetch JWT from session:", err);
+                    localStorage.removeItem("access_token");
+                    localStorage.removeItem("refresh_token");
+                    window.location.href = "{% url 'common:login' %}"; // Redirect to login
+                    return null;
+                }
+            }
+
+            // Refresh access token using refresh token
+            async function refreshToken() {
+                const refresh = localStorage.getItem("refresh_token");
+                if (!refresh) return null;
+                try {
+                    const res = await fetch("/api/token/refresh/", {
+                        method: "POST",
+                        headers: {"Content-Type": "application/json"},
+                        body: JSON.stringify({refresh})
+                    });
+                    if (!res.ok) throw new Error("Refresh token expired");
+                    const data = await res.json();
+                    localStorage.setItem("access_token", data.access);
+                    console.log("Access token refreshed successfully!");
+                    return data.access;
+                } catch (err) {
+                    console.log("Failed to refresh token:", err);
+                    return null;
+                }
+            }
+
+            // Ensure we have a valid token
+            async function ensureValidToken() {
+                let token = localStorage.getItem("access_token");
+
+                if (!token) {
+                    token = await fetchJWTFromSession();
+                } else if (isTokenExpired(token)) {
+                    token = await refreshToken();
+                    if (!token) {
+                        token = await fetchJWTFromSession();
+                    }
+                } else {
+                    // Token exists and valid → verify session
+                    try {
+                        const res = await fetch("{% url 'common:is_session_valid' %}", {
+                            method: "GET",
+                            credentials: "include"
+                        });
+                        if (!res.ok) throw new Error("Session invalid");
+                    } catch {
+                        console.log("Session expired — clearing tokens");
+                        localStorage.removeItem("access_token");
+                        localStorage.removeItem("refresh_token");
+                        window.location.href = "{% url 'common:login' %}";
+                    }
+                }
+
+                return token;
+            }
+
+            //Background token refresher
+            function startTokenAutoRefresh() {
+                const refreshInterval = 4 * 60 * 1000; // 4 minutes
+                setInterval(async () => {
+                    const token = localStorage.getItem("access_token");
+                    if (!token || isTokenExpired(token)) {
+                        console.log("Access token expired or missing — refreshing...");
+                        const newToken = await refreshToken();
+                        if (!newToken) {
+                            await fetchJWTFromSession(); // Try session fallback
+                        }
+                    }
+                }, refreshInterval);
+            }
+
+            await ensureValidToken();
+            startTokenAutoRefresh();
+        });
+    </script>
     <title>{% trans "BASE.TITLE" %}</title>
 </head>
 <body>

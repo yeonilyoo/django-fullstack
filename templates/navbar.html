@@ -28,7 +28,7 @@ border-bottom: add underline for navbar
                 {% if user.is_authenticated %}
                     <!-- django 4.1 and above only takes POST for logout -->
                     {#<a class="nav-link" href="{%  url 'common:logout' %}">{{ user.username }} (logout)</a>#}
-                    <form action="{% url 'common:logout' %}" method="post" style="display:inline;">
+                    <form id="logoutForm" action="{% url 'common:logout' %}" method="post" style="display:inline;">
                         {% csrf_token %}
                         <button type="submit" class="nav-link btn btn-link" style="padding:0;">
                             {{ user.username }} ({% trans "NAVBAR.LOGOUT" %})
@@ -62,3 +62,14 @@ border-bottom: add underline for navbar
         </ul>
     </div>
 </nav>
+
+<script>
+    document.getElementById("logoutForm").addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        localStorage.removeItem("access_token");
+        localStorage.removeItem("refresh_token");
+
+        e.target.submit();
+    });
+</script>
