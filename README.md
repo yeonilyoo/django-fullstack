@@ -1,5 +1,12 @@
 ### Required:
 
+create super user:
+```
+(.djenv) [vagrant@docker django-fullstack]$ docker exec -it docker-web-1 /bin/bash
+root@2b810f3f351e:/app# python manage.py createsuperuser
+```
+
+
 as super user, go to /admin, social applications, add google login
 
 under config/const/const.py, provide google login and password
