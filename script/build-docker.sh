@@ -1,3 +1,5 @@
 # !/bin/bash
+SCRIPT_DIR="$(dirname "$(realpath "$0")")"
+COMPOSE_FILE="$SCRIPT_DIR/../docker/docker-compose.yml"
 
-docker compose -f "$HOME/project/django-fullstack/docker/docker-compose.yml" up -d --build
+docker compose -f "$COMPOSE_FILE" up -d --build
