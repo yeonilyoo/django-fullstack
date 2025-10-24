@@ -1,0 +1,7 @@
+**/.env*
+docker/
+script/
+
+db.sqlite3
+README.md
+data.py

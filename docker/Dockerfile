@@ -1,13 +1,22 @@
 # docker build -f docker/Dockerfile -t mysite-dev .
-FROM python:3.13.7
+# Stage 1
+FROM python:3.13.7 as builder
+
+RUN pip install --upgrade pip && pip install --user --no-cache-dir -r requirements.txt
 
 WORKDIR /app
 
 # Install netcat for health checks / wait-for-db
-RUN apt-get update && apt-get install -y netcat-openbsd && rm -rf /var/lib/apt/lists/*
+# replaced with docker-compose healthy check
+#RUN apt-get update && apt-get install -y netcat-openbsd && rm -rf /var/lib/apt/lists/*
+
+# Stage 2
+FROM python:3.13.7-slim
+
+COPY --from=builder /root/.local /root/.local
+ENV PATH=/root/.local/bin:$PATH
 
 COPY .. .
-RUN pip install --upgrade pip && pip install -r requirements.txt
 
 ENTRYPOINT ["bash", "/app/docker/entrypoint.sh"]
 
