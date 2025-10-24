@@ -2,6 +2,8 @@
 # Stage 1
 FROM python:3.13.7 as builder
 
+COPY ../requirements.txt .
+
 RUN pip install --upgrade pip && pip install --user --no-cache-dir -r requirements.txt
 
 WORKDIR /app
