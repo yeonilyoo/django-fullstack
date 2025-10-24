@@ -1,12 +1,11 @@
 # docker build -f docker/Dockerfile -t mysite-dev .
 # Stage 1
-FROM python:3.13.7 as builder
+FROM python:3.13.7 AS builder
 
 COPY ../requirements.txt .
 
 RUN pip install --upgrade pip && pip install --user --no-cache-dir -r requirements.txt
 
-WORKDIR /app
 
 # Install netcat for health checks / wait-for-db
 # replaced with docker-compose healthy check
@@ -14,6 +13,8 @@ WORKDIR /app
 
 # Stage 2
 FROM python:3.13.7-slim
+
+WORKDIR /app
 
 COPY --from=builder /root/.local /root/.local
 ENV PATH=/root/.local/bin:$PATH

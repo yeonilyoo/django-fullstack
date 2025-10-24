@@ -1,5 +1,4 @@
 **/.env*
-docker/
 script/
 
 db.sqlite3
