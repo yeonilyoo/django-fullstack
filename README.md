@@ -9,11 +9,11 @@ root@2b810f3f351e:/app# python manage.py createsuperuser
 
 as super user, go to /admin, social applications, add google login
 
-under config/const/const.py, provide google login and password
+requires environment to add EMAIL_HOST_EMAIL and EMAIL_HOST_EMAIL_PASSWORD for sending email for resetting password of user
 
 ```
-EMAIL_USER = "your_email@gmail.com"
-EMAIL_PASSWORD = "your_app_password"
+EMAIL_HOST_USE = os.environ.get("EMAIL_HOST_EMAIL", "admin@admin.com")
+EMAIL_HOST_USE = os.environ.get("EMAIL_HOST_EMAIL_PASSWORD", "P@ssw0rd")
 ```
 
 Due to `api/` using token with body username and password, requires https for security.

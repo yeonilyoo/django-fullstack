@@ -19,12 +19,10 @@ def comment_create_question(request, question_id):
             comment.question = question
             comment.save()
             # return redirect("QnA:detail", question_id=question.id)
-            return redirect(
-                "{}#comment_{}".format(
-                    resolve_url("QnA:detail", question_id=comment.question.id),
-                    comment.id,
-                )
-            )
+            return redirect("{}#comment_{}".format(
+                resolve_url("QnA:detail", question_id=comment.question.id),
+                comment.id,
+            ))
     else:
         form = CommentForm()
     context = {"form": form}
@@ -37,12 +35,10 @@ def comment_modify_question(request, comment_id):
     if request.user != comment.author:
         messages.error(request, "You are not the author of this comment.")
         # return redirect("QnA:detail", question_id=comment.question.id)
-        return redirect(
-            "{}#comment_{}".format(
-                resolve_url("QnA:detail", question_id=comment.question.id),
-                comment.id,
-            )
-        )
+        return redirect("{}#comment_{}".format(
+            resolve_url("QnA:detail", question_id=comment.question.id),
+            comment.id,
+        ))
 
     if request.method == "POST":
         form = CommentForm(request.POST, instance=comment)
@@ -52,12 +48,10 @@ def comment_modify_question(request, comment_id):
             comment.modify_date = timezone.now()
             comment.save()
             # return redirect("QnA:detail", question_id=comment.question.id)
-            return redirect(
-                "{}#comment_{}".format(
-                    resolve_url("QnA:detail", question_id=comment.question.id),
-                    comment.id,
-                )
-            )
+            return redirect("{}#comment_{}".format(
+                resolve_url("QnA:detail", question_id=comment.question.id),
+                comment.id,
+            ))
     else:
         form = CommentForm(instance=comment)
     context = {"form": form}
@@ -87,12 +81,11 @@ def comment_create_answer(request, answer_id):
             comment.answer = answer
             comment.save()
             # return redirect("QnA:detail", question_id=comment.answer.question.id)
-            return redirect(
-                "{}#comment_{}".format(
-                    resolve_url("QnA:detail", question_id=comment.answer.question.id),
-                    comment.id,
-                )
-            )
+            return redirect("{}#comment_{}".format(
+                resolve_url("QnA:detail",
+                            question_id=comment.answer.question.id),
+                comment.id,
+            ))
     else:
         form = CommentForm()
     context = {"form": form}
@@ -114,12 +107,11 @@ def comment_modify_answer(request, comment_id):
             comment.modify_date = timezone.now()
             comment.save()
             # return redirect("QnA:detail", question_id=comment.answer.question.id)
-            return redirect(
-                "{}#comment_{}".format(
-                    resolve_url("QnA:detail", question_id=comment.answer.question.id),
-                    comment.id,
-                )
-            )
+            return redirect("{}#comment_{}".format(
+                resolve_url("QnA:detail",
+                            question_id=comment.answer.question.id),
+                comment.id,
+            ))
     else:
         form = CommentForm(instance=comment)
     context = {"form": form}
@@ -132,18 +124,14 @@ def comment_delete_answer(request, comment_id):
     if request.user != comment.author:
         messages.error(request, "You are not the author of this comment.")
         # return redirect("QnA:detail", question_id=comment.answer.question.id)
-        return redirect(
-            "{}#comment_{}".format(
-                resolve_url("QnA:detail", question_id=comment.answer.question.id),
-                comment.id,
-            )
-        )
+        return redirect("{}#comment_{}".format(
+            resolve_url("QnA:detail", question_id=comment.answer.question.id),
+            comment.id,
+        ))
     else:
         comment.delete()
     # return redirect("QnA:detail", question_id=comment.answer.question.id)
-    return redirect(
-        "{}#answer_{}".format(
-            resolve_url("QnA:detail", question_id=comment.answer.question.id),
-            comment.answer.id,
-        )
-    )
+    return redirect("{}#answer_{}".format(
+        resolve_url("QnA:detail", question_id=comment.answer.question.id),
+        comment.answer.id,
+    ))

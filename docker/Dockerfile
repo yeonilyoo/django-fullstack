@@ -14,6 +14,10 @@ RUN pip install --upgrade pip && pip install --user --no-cache-dir -r requiremen
 # Stage 2
 FROM python:3.13.7-slim
 
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    default-libmysqlclient-dev build-essential && \
+    rm -rf /var/lib/apt/lists/*
+
 WORKDIR /app
 
 COPY --from=builder /root/.local /root/.local
