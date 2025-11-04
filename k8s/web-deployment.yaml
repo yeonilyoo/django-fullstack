@@ -24,7 +24,7 @@ spec:
           resources:
             limits:
               cpu: "1"
-              memory: "1Gi"
+              memory: "500Mi"
       initContainers:
         - name: migrate-and-collect
           image: yeonilyoo/django-web:latest
