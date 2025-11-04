@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myweb-nginx
+  namespace: myweb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: myweb-nginx
+  template:
+    metadata:
+      labels:
+        app: myweb-nginx
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:latest
+          ports:
+            - containerPort: 80
+            - containerPort: 443
+          envFrom:
+            - secretRef:
+                name: myweb-env
+          volumeMounts:
+            - name: nginx-config
+              mountPath: /etc/nginx/conf.d/default.conf
+              subPath: default.conf
+            - name: ssl-crt
+              mountPath: /etc/nginx/selfsigned.crt
+              subPath: selfsigned.crt
+            - name: ssl-key
+              mountPath: /etc/nginx/selfsigned.key
+              subPath: selfsigned.key
+          resources:
+            limits:
+              cpu: "0.5"
+              memory: "256Mi"
+      volumes:
+        - name: nginx-config
+          configMap:
+            name: myweb-nginx-config
+        - name: ssl-crt
+          secret:
+            secretName: myweb-ssl
+        - name: ssl-key
+          secret:
+            secretName: myweb-ssl
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: myweb-nginx
+  namespace: myweb
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 80
+      targetPort: 80
+    - port: 443
+      targetPort: 443
+  selector:
+    app: myweb-nginx

@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myweb-db
+  namespace: myweb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: myweb-db
+  template:
+    metadata:
+      labels:
+        app: myweb-db
+    spec:
+      containers:
+        - name: mariadb
+          image: mariadb:11
+          ports:
+            - containerPort: 3306
+          envFrom:
+            - secretRef:
+                name: myweb-env
+          volumeMounts:
+            - name: db-storage
+              mountPath: /var/lib/mysql
+          resources:
+            limits:
+              cpu: "1.5"
+              memory: "1Gi"
+      volumes:
+        - name: db-storage
+          persistentVolumeClaim:
+            claimName: db-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: myweb-db
+  namespace: myweb
+spec:
+  type: ClusterIP
+  ports:
+    - port: 3306
+      targetPort: 3306
+  selector:
+    app: myweb-db

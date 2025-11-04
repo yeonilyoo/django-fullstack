@@ -181,8 +181,8 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
 # Required for resetting password email
-EMAIL_HOST_USE = os.environ.get("EMAIL_HOST_EMAIL", "admin@admin.com")
-EMAIL_HOST_USE = os.environ.get("EMAIL_HOST_EMAIL_PASSWORD", "P@ssw0rd")
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_EMAIL", "admin@admin.com")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_EMAIL_PASSWORD", "P@ssw0rd")
 
 # For Auth
 REST_FRAMEWORK = {

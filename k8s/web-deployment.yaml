@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myweb-app
+  namespace: myweb
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: myweb-app
+  template:
+    metadata:
+      labels:
+        app: myweb-app
+    spec:
+      containers:
+        - name: django-web
+          image: yeonilyoo/django-web:latest
+          ports:
+            - containerPort: 8000
+          envFrom:
+            - secretRef:
+                name: myweb-env
+          resources:
+            limits:
+              cpu: "1"
+              memory: "1Gi"
+      initContainers:
+        - name: migrate-and-collect
+          image: yeonilyoo/django-web:latest
+          envFrom:
+            - secretRef:
+                name: myweb-env
+          command:
+            - sh
+            - -c
+            - |
+              echo "Waiting for DB..."
+              for i in $(seq 1 60); do
+                python manage.py migrate --noinput && break || sleep 2
+              done
+              python manage.py collectstatic --noinput
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: myweb-app
+  namespace: myweb
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8000
+      targetPort: 8000
+  selector:
+    app: myweb-app
