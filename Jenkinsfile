@@ -2,8 +2,8 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_REGISTRY = 'yeonilyoo'
-        IMAGE_NAME = 'django-web'
+        DOCKER_REGISTRY = 'docker.io'
+        IMAGE_NAME = 'yeonilyoo/django-web'
         GIT_CREDENTIALS_ID = 'github_cred'
         DOCKER_CREDENTIALS_ID = 'docker_cred'
     }
