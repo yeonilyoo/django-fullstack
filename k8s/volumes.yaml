@@ -20,8 +20,6 @@ kind: PersistentVolumeClaim
 metadata:
   name: db-pvc
   namespace: myweb
-  annotations:
-    argocd.argoproj.io/sync-wave: "3"
 spec:
   accessModes:
     - ReadWriteOnce

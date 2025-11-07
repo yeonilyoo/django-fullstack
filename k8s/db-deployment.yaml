@@ -2,9 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: myweb-db
-  namespace: myweb
-  annotations:
-    argocd.argoproj.io/sync-wave: "4"
+  namespace: myweb\
 spec:
   replicas: 1
   selector:
@@ -39,9 +37,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: myweb-db
-  namespace: myweb
-  annotations:
-    argocd.argoproj.io/sync-wave: "5"
+  namespace: myweb\
 spec:
   type: ClusterIP
   ports:
