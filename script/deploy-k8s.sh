@@ -52,6 +52,5 @@ echo "Waiting for Nginx pod to be ready..."
 kubectl wait --for=condition=ready pod -l app=myweb-nginx -n myweb --timeout=120s
 
 kubectl apply -f "${K8S_DIR}/08_ingress.yaml"
-kubectl wait --for=condition=Available ingress myweb-ingress -n myweb --timeout=120s
 
 echo "Deployment complete!"

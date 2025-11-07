@@ -195,7 +195,7 @@ REST_FRAMEWORK = {
 # for secure HTTPS, requires Proxy
 if DJANGO_ENV == "prod":
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
-    SECURE_SSL_REDIRECT = True
+    SECURE_SSL_REDIRECT = False  # Handled by Ingress
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
     ALLOWED_HOSTS = ["*"]  # testing purpose
