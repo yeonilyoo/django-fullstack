@@ -3,6 +3,8 @@ kind: Deployment
 metadata:
   name: myweb-db
   namespace: myweb
+  annotations:
+    argocd.argoproj.io/sync-wave: "4"
 spec:
   replicas: 1
   selector:
@@ -38,6 +40,8 @@ kind: Service
 metadata:
   name: myweb-db
   namespace: myweb
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
 spec:
   type: ClusterIP
   ports:
