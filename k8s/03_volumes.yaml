@@ -3,8 +3,6 @@ kind: PersistentVolume
 metadata:
   name: db-pv
   namespace: myweb
-  annotations:
-    argocd.argoproj.io/sync-wave: "2"
 spec:
   capacity:
     storage: 1Gi
