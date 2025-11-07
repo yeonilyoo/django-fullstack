@@ -29,8 +29,10 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    sh "docker-compose build"
-                    sh "docker tag ${IMAGE_NAME}:latest ${DOCKER_REGISTRY}/${IMAGE_NAME}:${GIT_HASH}"
+                    dir('docker') {
+                        sh "docker-compose build"
+                        sh "docker tag django-web:latest ${DOCKER_REGISTRY}/${IMAGE_NAME}:${GIT_HASH}"
+                    }
                 }
             }
         }
@@ -64,9 +66,7 @@ pipeline {
                         sh """
                             git config user.name "Jenkins"
                             git config user.email "jenkins@example.com"
-                            git fetch origin
                             git checkout -B deploy
-                            git merge origin/master
                             git add k8s/05_web-deployment.yaml
                             git commit -m "Update image tag to ${GIT_HASH} [ci skip]"
                             git push https://${GIT_USER}:${GIT_PASS}@github.com/yeonilyoo/django-fullstack.git deploy
