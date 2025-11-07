@@ -33,14 +33,16 @@ echo "Waiting for Web pod to be ready..."
 kubectl wait --for=condition=ready pod -l app=myweb-app -n myweb --timeout=180s
 
 # ConfigMap and Secret for Nginx
-kubectl create configmap myweb-nginx-config \
-  --from-file="${NGINX_DIR}/default.conf" \
-  -n myweb --dry-run=client -o yaml | kubectl apply -f -
+# kubectl create configmap myweb-nginx-config \
+#   --from-file="${NGINX_DIR}/default.conf" \
+#   -n myweb --dry-run=client -o yaml | kubectl apply -f -
+kubectl apply -f "${K8S_DIR}/06_nginx-configmap.yaml"
 
-kubectl create secret generic myweb-ssl \
-  --from-file="${NGINX_DIR}/selfsigned.crt" \
-  --from-file="${NGINX_DIR}/selfsigned.key" \
-  -n myweb --dry-run=client -o yaml | kubectl apply -f -
+# kubectl create secret generic myweb-ssl \
+#   --from-file="${NGINX_DIR}/selfsigned.crt" \
+#   --from-file="${NGINX_DIR}/selfsigned.key" \
+#   -n myweb --dry-run=client -o yaml | kubectl apply -f -
+kubectl apply -f "${K8S_DIR}/06_nginx-secret.yaml"
 
 # Apply Nginx deployment
 kubectl apply -f "${K8S_DIR}/07_nginx-deployment.yaml"
@@ -48,5 +50,8 @@ kubectl apply -f "${K8S_DIR}/07_nginx-deployment.yaml"
 # Optional: Wait for Nginx to be ready
 echo "Waiting for Nginx pod to be ready..."
 kubectl wait --for=condition=ready pod -l app=myweb-nginx -n myweb --timeout=120s
+
+kubectl apply -f "${K8S_DIR}/08_ingress.yaml"
+kubectl wait --for=condition=Available ingress myweb-ingress -n myweb --timeout=120s
 
 echo "Deployment complete!"
