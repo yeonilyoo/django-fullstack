@@ -20,8 +20,8 @@ pipeline {
         stage('Merge') {
             steps {
                 script{
-                    git fetch origin master
-                    git merge --ff-only origin/master
+                    sh "git fetch origin master"
+                    sh "git merge --ff-only origin/master"
                 }
             }
         }
