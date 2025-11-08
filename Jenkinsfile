@@ -11,9 +11,18 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'master',
+                git branch: 'deploy',
                     url: 'https://github.com/yeonilyoo/django-fullstack.git',
                     credentialsId: "${GIT_CREDENTIALS_ID}"
+            }
+        }
+
+        stage('Merge') {
+            steps {
+                script{
+                    git fetch origin master
+                    git merge --ff-only origin/master
+                }
             }
         }
 
@@ -66,10 +75,9 @@ pipeline {
                         sh """
                             git config user.name "Jenkins"
                             git config user.email "jenkins@example.com"
-                            git checkout -B deploy
                             git add k8s/05_web-deployment.yaml
                             git commit -m "Update image tag to ${GIT_HASH} [ci skip]"
-                            git push https://${GIT_USER}:${GIT_PASS}@github.com/yeonilyoo/django-fullstack.git deploy
+                            git push -f https://${GIT_USER}:${GIT_PASS}@github.com/yeonilyoo/django-fullstack.git deploy
                         """
                     }
                 }
