@@ -21,7 +21,7 @@ pipeline {
             steps {
                 script{
                     sh "git fetch origin master"
-                    sh "git merge --ff-only origin/master"
+                    sh "git merge origin/master"
                 }
             }
         }
