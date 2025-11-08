@@ -3,6 +3,7 @@ set -euo pipefail
 
 SCRIPT_DIR="$(dirname "$(realpath "$0")")"
 K8S_DIR="${SCRIPT_DIR}/../k8s"
+K8S_DEFAULT_DIR="${SCRIPT_DIR}/../k8s-default"
 NGINX_DIR="${SCRIPT_DIR}/../docker/nginx"
 
 SECRETS_FILE="${K8S_DIR}/02_secrets.yaml"
@@ -12,6 +13,8 @@ SECRETS_FILE="${K8S_DIR}/02_secrets.yaml"
 # read -sp "Enter MySQL user password: " USER_PASS; echo
 # sed -i "s/MYSQL_ROOT_PASSWORD: .*/MYSQL_ROOT_PASSWORD: \"$ROOT_PASS\"/" "$SECRETS_FILE"
 # sed -i "s/MYSQL_PASSWORD: .*/MYSQL_PASSWORD: \"$USER_PASS\"/" "$SECRETS_FILE"
+
+kubectl apply -f "${K8S_DEFAULT_DIR}/pv.yaml"
 
 # Apply namespace and secrets
 kubectl apply -f "${K8S_DIR}/01_namespace.yaml"
