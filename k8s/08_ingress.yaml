@@ -19,6 +19,6 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: myweb-nginx
+                name: myweb-app
                 port:
-                  number: 80
+                  number: 8000
