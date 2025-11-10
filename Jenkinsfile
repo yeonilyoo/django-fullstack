@@ -39,7 +39,7 @@ pipeline {
             steps {
                 script {
                     dir('docker') {
-                        sh "docker-compose build"
+                        sh "docker-compose build --no-cache web"
                         sh "docker tag django-web:latest ${DOCKER_REGISTRY}/${IMAGE_NAME}:${GIT_HASH}"
                     }
                 }
