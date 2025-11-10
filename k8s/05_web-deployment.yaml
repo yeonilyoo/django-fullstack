@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: django-web
-          image: yeonilyoo/django-web:706b59a
+          image: yeonilyoo/django-web:f30fbba
           ports:
             - containerPort: 8000
           envFrom:
@@ -27,7 +27,7 @@ spec:
               memory: 256Mi
       initContainers:
         - name: migrate-and-collect
-          image: yeonilyoo/django-web:706b59a
+          image: yeonilyoo/django-web:f30fbba
           envFrom:
             - secretRef:
                 name: myweb-env
